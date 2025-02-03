@@ -14,10 +14,9 @@ class CalculatorApp extends StatelessWidget {
       title: 'Simple Calculator',
       theme: ThemeData(
         brightness: Brightness.dark,
-        primaryColor: Colors.pink[200],
+        primaryColor: Colors.pink[800],
         textTheme: TextTheme(
-          bodyText1: TextStyle(color: Colors.pink[200]),
-          bodyText2: TextStyle(color: Colors.pink[200]),
+          bodyLarge: TextStyle(color: Colors.pink[800]),
         ),
       ),
       home: const CalculatorHomePage(title: 'Nadia Sutyrina'),
@@ -58,6 +57,19 @@ class _CalculatorHomePageState extends State<CalculatorHomePage> {
           _accumulator = '';
           _lastOperation = '';
         }
+      } else if (value == '^2') {
+        try {
+          final expression = Expression.parse('($_accumulator)^2');
+          final evaluator = const ExpressionEvaluator();
+          final result = evaluator.eval(expression, {});
+          _lastOperation = '($_accumulator)^2';
+          _display = result.toString();
+          _accumulator = result.toString();
+        } catch (e) {
+          _display = 'Error';
+          _accumulator = '';
+          _lastOperation = '';
+        }
       } else {
         if (_display == _accumulator) {
           _display = '';
@@ -82,7 +94,7 @@ class _CalculatorHomePageState extends State<CalculatorHomePage> {
           ),
           textAlign: TextAlign.center,
         ),
-        backgroundColor: Colors.pink[800],
+        backgroundColor: Colors.grey[800],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -110,6 +122,7 @@ class _CalculatorHomePageState extends State<CalculatorHomePage> {
             ),
             Column(
               children: [
+                _buildButtonRow(['^2']),
                 _buildButtonRow(['7', '8', '9', '/']),
                 _buildButtonRow(['4', '5', '6', '*']),
                 _buildButtonRow(['1', '2', '3', '-']),
@@ -127,7 +140,7 @@ class _CalculatorHomePageState extends State<CalculatorHomePage> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: buttons.map((button) {
         Color buttonColor = Colors.pink[200]!;
-        if (button == 'C' || button == '=' || button == '+' || button == '-' || button == '*' || button == '/') {
+        if (button == 'C' || button == '=' || button == '+' || button == '-' || button == '*' || button == '/' || button == '^2') {
           buttonColor = Colors.pink[800]!;
         }
         return ElevatedButton(
